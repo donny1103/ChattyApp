@@ -1,5 +1,5 @@
 import React from 'react';
-import generateRandomId from "./ranId.js";
+
 class ChatBar extends React.Component{
   constructor(props) {
     super(props);
@@ -9,7 +9,6 @@ class ChatBar extends React.Component{
   render(){
     // listening to the event in username input box
     const _handleUserName = (e) =>{
-
       e.target.value ? (
         this.setState({username:e.target.value})
       ) : (
@@ -20,22 +19,20 @@ class ChatBar extends React.Component{
     const _handleNewMessage = (e) => {
       if(e.key == 'Enter'){
         const newMessage = {
+          type: "postMessage",
           username: this.state.username, 
           content: e.target.value
         };
         this.props.sendToServer(newMessage);
-
         e.target.value = "";
       }
     }
-  
     return(
       <footer className="chatbar">
         <input className="chatbar-username" placeholder="Your Name (Optional)" onChange = {_handleUserName}/>
         <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={_handleNewMessage}/>
       </footer>
     )
-
   }
 }
 
