@@ -8,7 +8,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
-      messages:[],
+      messages:[]
     };
     this.sendToServer = this.sendToServer.bind(this);
   }
@@ -20,13 +20,15 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
-    this.socket.onmessage = this.handleServerMessage;
+    this.socket.onmessage = this.handleServerMessage.bind(this);
   }
 
   //handle message from server
   handleServerMessage = (e) => {
     const newMessages = this.state.messages.concat(JSON.parse(e.data));
+    //const oldMessage = this.state.messages;
     this.setState({messages: newMessages});
+
   }
 
   render() {
