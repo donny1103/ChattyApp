@@ -8,15 +8,17 @@ class ChatBar extends React.Component{
   render(){
 
     const _handleUserName = (e) =>{
-      if(!e.target.value){
-        this.state.username = e.target.value;
+      if(e.target.value){
+        this.setState({username:e.target.value});
+      }else{
+        this.setState({username:"Anonymous"});
       }
     }
 
     const _handleNewMessage = (e) => {
       if(e.key == 'Enter'){
         const newMessage = {
-          id: generateRandomId(), 
+          id: Math.random(), 
           username: this.state.username, 
           content: e.target.value
         };
