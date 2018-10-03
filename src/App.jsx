@@ -6,19 +6,27 @@ import ChatBar from "./ChatBar.jsx";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {loading: true,...Data};
-    this.addNewMessage = this.addNewMessage.bind(this);
+    this.state = {
+      currentUser: {name: "Bob"},
+      messages:[],
+    };
+    this.sendToServer = this.sendToServer.bind(this);
   }
 
-  addNewMessage(message){
-    const newMessages = this.state.messages.concat(message);
-    this.setState({messages: newMessages});
+  //send message to server
+  sendToServer(message){
+    this.socket.send(JSON.stringify(message));
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      
-    }, 3000);
+    this.socket = new WebSocket('ws://localhost:3001');
+    this.socket.onmessage = this.handleServerMessage;
+  }
+
+  //handle message from server
+  handleServerMessage = (e) => {
+    const newMessages = this.state.messages.concat(JSON.parse(e.data));
+    this.setState({messages: newMessages});
   }
 
   render() {
@@ -30,7 +38,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         {messages}
-        <ChatBar addNewMessage = {this.addNewMessage}/>
+        <ChatBar sendToServer = {this.sendToServer}/>
       </div>
     )  
   }
