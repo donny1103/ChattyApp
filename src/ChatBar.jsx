@@ -4,33 +4,40 @@ class ChatBar extends React.Component{
   constructor(props) {
     super(props);
     //set initial state
-    this.state = {username:"Anonymous"};
+    this.state = {
+      username:"Anonymous",
+      content:""
+    };
   }
   render(){
     // listening to the event in username input box
-    const _handleUserName = (e) =>{
+    const onUserNameChange = key => e =>{
       e.target.value ? (
-        this.setState({username:e.target.value})
+        this.setState({[key]:e.target.value})
       ) : (
-        this.setState({username:"Anonymous"})
+        this.setState({[key]:"Anonymous"})
       );
     }
     // listening to the event in message input box
-    const _handleNewMessage = (e) => {
-      if(e.key == 'Enter'){
-        const newMessage = {
-          type: "postMessage",
-          username: this.state.username, 
-          content: e.target.value
-        };
-        this.props.sendToServer(newMessage);
-        e.target.value = "";
+    
+    const onMessageChange = key => e  =>{
+        this.setState({[key]:e.target.value})
+    }
+
+    const onKeyPress = key => e => {
+      if(e.key === 'Enter'){
+        this.props.handleChatBarChange(this.state,key)  
+
+        if(key === "content"){
+          e.target.value = "";
+        }   
       }
     }
+
     return(
       <footer className="chatbar">
-        <input className="chatbar-username" placeholder="Your Name (Optional)" onChange = {_handleUserName}/>
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={_handleNewMessage}/>
+        <input className="chatbar-username" placeholder="Your Name (Optional)" onChange = {onUserNameChange('username')} onKeyPress={onKeyPress('username')}/>
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onChange = {onMessageChange('content')} onKeyPress={onKeyPress('content')}/>
       </footer>
     )
   }

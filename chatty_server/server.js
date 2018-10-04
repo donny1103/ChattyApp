@@ -51,11 +51,15 @@ const handleClientMessage = (message, messageId) => {
       username: parsedMes.username,
       content: parsedMes.content
     }
+    case "postNotification":
+    return {
+      type: "incomingNotification",
+      id: messageId,
+      username: parsedMes.username,
+      content: parsedMes.content
+    }
+    default:
+    // show an error in the console if the message type is unknown
+    throw new Error("Unknown event type " + parsedMes.type);
   }
-  // return {
-  //   type: "incomingMessage",
-  //   id: messageId,
-  //   username: parsedMes.username,
-  //   content: parsedMes.content
-  // }
 }

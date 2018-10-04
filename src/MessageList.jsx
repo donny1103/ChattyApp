@@ -10,4 +10,5 @@ const MessageList = props => {
     </main>    
   );
 }
+
 export default MessageList;

@@ -9,14 +9,31 @@ class App extends Component {
       currentUser: {name: "Bob"},
       messages:[]
     };
-
   }
-
-  //send message to server
-  sendToServer = (message) => {
+ 
+  handleChatBarChange = (chatBarState,key) => {
+    let message;
+    switch (key){
+      case "username":
+        message = {
+          type: "postNotification",
+          username: chatBarState[key], 
+          content: `${this.state.currentUser.name} has changed their name to ${chatBarState[key]}`
+        }
+      break;
+      case "content":
+        message = {
+          type: "postMessage",
+          username: chatBarState.username, 
+          content: chatBarState[key]
+        };
+        this.setState({currentUser: {name: chatBarState.username}})      
+      break;
+      default:throw new Error("Unknown event type " + key);
+    }
     this.socket.send(JSON.stringify(message));
   }
-
+  
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
     this.socket.onmessage = this.handleServerMessage;
@@ -24,13 +41,22 @@ class App extends Component {
 
   //handle message from server
   handleServerMessage = (e) => {
-    
     const data = JSON.parse(e.data);
-    switch(data.type){
+    const newMessages = this.state.messages.concat(data);
+
+    switch (data.type){
       case "incomingMessage":
-        const newMessages = this.state.messages.concat(data);
-        this.setState({messages: newMessages});
+        this.setState({messages: newMessages}); 
       break;
+      case "incomingNotification":
+        this.setState({
+          currentUser: {name: data.username},
+          messages: newMessages
+        });
+      break;
+      default:
+      // show an error in the console if the message type is unknown
+      throw new Error("Unknown event type " + data.type);
     }
 
   }
@@ -42,7 +68,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages}/>
-        <ChatBar sendToServer={this.sendToServer}/>
+        <ChatBar handleChatBarChange={this.handleChatBarChange}/>
       </div>
     )  
   }
