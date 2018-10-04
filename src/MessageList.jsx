@@ -6,7 +6,7 @@ const MessageList = props => {
     <main className="messages">
       {
         props.messages.map((message) => (
-        <Message key={message.id} username={message.username} content={message.content} messageType={message.type} usernameColor = {props.usernameColor}/>))
+        <Message key={message.id} username={message.username} content={message.content} messageType={message.type} usernameColor = {message.usernameColor}/>))
       }
     </main>    
   );

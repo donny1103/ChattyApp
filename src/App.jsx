@@ -19,14 +19,15 @@ class App extends Component {
         dataToServer = {
           type: "postNotification",
           username: data, 
-          content: `${this.state.currentUser.name} has changed their name to ${data}`
+          content: `${this.state.currentUser.name} has changed their name to ${data}`,
         }
       break;
       case "content":
         dataToServer = {
           type: "postMessage",
           username: this.state.currentUser.name, 
-          content: data
+          content: data,
+          color: this.state.currentUser.color
         };
         //this.setState({currentUser: {name: chatBarState.username}})      
       break;
@@ -86,7 +87,7 @@ class App extends Component {
           <a href="/" className="navbar-brand" >Chatty</a>
           <div className="usercount">{this.state.count} users online</div>
         </nav>
-        <MessageList messages={this.state.messages} usernameColor = {this.state.currentUser.color}/>
+        <MessageList messages={this.state.messages}/>
         <ChatBar handleChatBar={this.handleChatBar} />
       </div>
     )  

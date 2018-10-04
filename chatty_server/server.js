@@ -24,7 +24,7 @@ wss.on('connection', ws => {
     type:"counter",
     content: wss.clients.size})
   );
-
+  
   ws.send(JSON.stringify({
     type:"assignColor",
     color:color[Math.floor(Math.random()*4+1)]
@@ -38,12 +38,11 @@ wss.on('connection', ws => {
   ws.on('close', () => {
     wss.broadcast(JSON.stringify({
       type:"counter",
-      count: wss.clients.size})
+      content: wss.clients.size})
     );
     console.log('Client disconnected')
   });
 });
-
 
 // broadcast to all clients
 wss.broadcast = data =>{
@@ -63,7 +62,8 @@ const handleClientMessage = (message, messageId) => {
       type: "incomingMessage",
       id: messageId,
       username: parsedMes.username,
-      content: parsedMes.content
+      content: parsedMes.content,
+      usernameColor:parsedMes.color
     }
     case "postNotification":
     return {

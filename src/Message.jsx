@@ -10,21 +10,23 @@ const Message = props => {
   const notificationMessage = ( 
     <div className="message system">{props.content}.</div>
   );
+  const imageURL = ( 
+    <div><img src={props.content}/></div>
+  );
+
   if (props.messageType === "incomingMessage"){
 
-    return(chatMessage)
+    return chatMessage
 
   }else if (props.messageType === "incomingNotification"){
 
-    return(notificationMessage)
-  }
-  // return (
-  //   <div className="message">
-  //     <span className="message-username" style={{color:props.usernameColor}}>{props.username}</span>
-  //     <span className="message-content">{props.content}</span>
-  //   </div>
+    return notificationMessage
 
-  // )
+  }else if(props.messageType === "incomingImage"){
+
+    return imageURL
+    
+  }
 }
 
 export default Message;
