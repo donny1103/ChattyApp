@@ -10,7 +10,7 @@ class ChatBar extends React.Component{
     };
   }
   render(){
-    // listening to the event in username input box
+ 
     const onUserNameChange = key => e =>{
       e.target.value ? (
         this.setState({[key]:e.target.value})
@@ -18,8 +18,7 @@ class ChatBar extends React.Component{
         this.setState({[key]:"Anonymous"})
       );
     }
-    // listening to the event in message input box
-    
+
     const onMessageChange = key => e  =>{
         this.setState({[key]:e.target.value})
     }

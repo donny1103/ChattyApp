@@ -7,7 +7,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
-      messages:[]
+      messages:[],
+      count: 0
     };
   }
  
@@ -36,12 +37,16 @@ class App extends Component {
   
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
+    // this.socket.onmessage = e => {
+    //   console.log(e)
+    // }
     this.socket.onmessage = this.handleServerMessage;
   }
 
   //handle message from server
   handleServerMessage = (e) => {
     const data = JSON.parse(e.data);
+    console.log(data)
     const newMessages = this.state.messages.concat(data);
 
     switch (data.type){
@@ -53,6 +58,9 @@ class App extends Component {
           currentUser: {name: data.username},
           messages: newMessages
         });
+      break;
+      case "counter":
+       this.setState({count: data.content}); 
       break;
       default:
       // show an error in the console if the message type is unknown
@@ -66,6 +74,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <div className="usercount">{this.state.count} users online</div>
         </nav>
         <MessageList messages={this.state.messages}/>
         <ChatBar handleChatBarChange={this.handleChatBarChange}/>
