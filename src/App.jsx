@@ -6,33 +6,33 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: "Anonymous",color: ""},
       messages:[],
       count: 0
     };
   }
  
-  handleChatBarChange = (chatBarState,key) => {
-    let message;
+  handleChatBar = (data,key) => {
+    let dataToServer;
     switch (key){
       case "username":
-        message = {
+        dataToServer = {
           type: "postNotification",
-          username: chatBarState[key], 
-          content: `${this.state.currentUser.name} has changed their name to ${chatBarState[key]}`
+          username: data, 
+          content: `${this.state.currentUser.name} has changed their name to ${data}`
         }
       break;
       case "content":
-        message = {
+        dataToServer = {
           type: "postMessage",
-          username: chatBarState.username, 
-          content: chatBarState[key]
+          username: this.state.currentUser.name, 
+          content: data
         };
-        this.setState({currentUser: {name: chatBarState.username}})      
+        //this.setState({currentUser: {name: chatBarState.username}})      
       break;
       default:throw new Error("Unknown event type " + key);
     }
-    this.socket.send(JSON.stringify(message));
+    this.socket.send(JSON.stringify(dataToServer));
   }
   
   componentDidMount() {
@@ -40,44 +40,54 @@ class App extends Component {
     // this.socket.onmessage = e => {
     //   console.log(e)
     // }
-    this.socket.onmessage = this.handleServerMessage;
+    this.socket.onmessage = this.handleServer;
   }
 
+  
   //handle message from server
-  handleServerMessage = (e) => {
+  handleServer = (e) => {
     const data = JSON.parse(e.data);
-    console.log(data)
     const newMessages = this.state.messages.concat(data);
-
+    const curUser = {...this.state.currentUser};
     switch (data.type){
       case "incomingMessage":
-        this.setState({messages: newMessages}); 
-      break;
-      case "incomingNotification":
         this.setState({
-          currentUser: {name: data.username},
+          currentUser: curUser,
+          messages: newMessages}); 
+      break;
+
+      case "incomingNotification":
+        curUser.name = data.username;
+
+        this.setState({
+          currentUser: curUser,
           messages: newMessages
         });
       break;
+
       case "counter":
        this.setState({count: data.content}); 
+      break;
+
+      case "assignColor":
+      curUser.color = data.color
+        this.setState({currentUser: curUser});
       break;
       default:
       // show an error in the console if the message type is unknown
       throw new Error("Unknown event type " + data.type);
     }
-
   }
 
   render() {
     return(
       <div>
         <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
+          <a href="/" className="navbar-brand" >Chatty</a>
           <div className="usercount">{this.state.count} users online</div>
         </nav>
-        <MessageList messages={this.state.messages}/>
-        <ChatBar handleChatBarChange={this.handleChatBarChange}/>
+        <MessageList messages={this.state.messages} usernameColor = {this.state.currentUser.color}/>
+        <ChatBar handleChatBar={this.handleChatBar} />
       </div>
     )  
   }
