@@ -23,4 +23,4 @@ Direct to the folder ChattApp and run `npm start` in the terminal to start clien
 Open another terminal and direct to `ChattApp/chatty_server` and run `npm start` to start react server 
 
 ## Screenshot
-![interface]("https://github.com/donny1103/ChattyApp/blob/master/styles/images/interface.png?raw=true")
+![interface](https://raw.githubusercontent.com/donny1103/ChattyApp/master/styles/images/interface.png)
