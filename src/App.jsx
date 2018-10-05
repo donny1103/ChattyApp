@@ -16,6 +16,7 @@ class App extends Component {
   handleChatBar = (data,key) => {
     let dataToServer;
     let [text,imgurls] = dataComplier(data);
+    let oldState = {...this.state};
     switch (key){
       case "username":
         dataToServer = {
@@ -27,6 +28,11 @@ class App extends Component {
         if(this.state.currentUser.name !== data){
           this.socket.send(JSON.stringify(dataToServer));
         }
+        this.setState({
+          currentUser: {name: data,color: oldState.currentUser.color},
+          messages:oldState.messages,
+          count: oldState.count
+        })
       break;
       case "content":
         dataToServer = {
@@ -78,7 +84,6 @@ class App extends Component {
       break;
 
       case "incomingNotification":
-        curUser.name = data.username;
         this.setState({
           currentUser: curUser,
           messages: newMessages
