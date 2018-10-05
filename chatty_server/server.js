@@ -3,7 +3,7 @@ const SocketServer = require('ws').Server;
 const uuid = require('uuid/v4');
 // Set the port to 3001
 const PORT = 3001;
-
+const randomColor = require('random-color');
 // Create a new express server
 const server = express()
    // Make the express server serve static assets (html, javascript, css) from the /public folder
@@ -16,24 +16,28 @@ const wss = new SocketServer({ server });
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
-const color = ['#129793','#505050','#FFF5C3','#9BD7D5','#FF7260'];
+
 wss.on('connection', ws => {
   console.log('Client connected');
 
+  //broadcast connected users
   wss.broadcast(JSON.stringify({
     type:"counter",
     content: wss.clients.size})
   );
   
+  //generate random color for connected user
   ws.send(JSON.stringify({
     type:"assignColor",
-    color:color[Math.floor(Math.random()*4+1)]
+    color:randomColor().hexString()
   }));
 
+  //broadcast messages to all users
   ws.on('message',(data)=>{
     const messageId = uuid();
     wss.broadcast(JSON.stringify(handleClientMessage(data, messageId)))
   });
+
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
     wss.broadcast(JSON.stringify({
@@ -63,6 +67,7 @@ const handleClientMessage = (message, messageId) => {
       id: messageId,
       username: parsedMes.username,
       content: parsedMes.content,
+      imgurls: parsedMes.imgurls,
       usernameColor:parsedMes.color
     }
     case "postNotification":
@@ -70,7 +75,8 @@ const handleClientMessage = (message, messageId) => {
       type: "incomingNotification",
       id: messageId,
       username: parsedMes.username,
-      content: parsedMes.content
+      content: parsedMes.content,
+      imgurls: parsedMes.imgurls
     }
     default:
     // show an error in the console if the message type is unknown

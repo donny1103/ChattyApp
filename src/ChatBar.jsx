@@ -16,7 +16,7 @@ class ChatBar extends React.Component{
 
     const onKeyPress = key => e => {
       if(e.key === 'Enter'){
-        this.setState({key:e.target.value})
+        this.setState({[key]:e.target.value})
         this.props.handleChatBar(this.state[key],key)  
         if(key === "content"){
           e.target.value = "";

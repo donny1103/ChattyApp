@@ -11,36 +11,56 @@ class App extends Component {
       count: 0
     };
   }
- 
+  
+  //complie data from chatbar and send to server
   handleChatBar = (data,key) => {
     let dataToServer;
+    let [text,imgurls] = dataComplier(data);
     switch (key){
       case "username":
         dataToServer = {
           type: "postNotification",
-          username: data, 
+          username: data,
+          imgurls: imgurls,
           content: `${this.state.currentUser.name} has changed their name to ${data}`,
+        }
+        if(this.state.currentUser.name !== data){
+          this.socket.send(JSON.stringify(dataToServer));
         }
       break;
       case "content":
         dataToServer = {
           type: "postMessage",
           username: this.state.currentUser.name, 
-          content: data,
+          content: text,
+          imgurls: imgurls,
           color: this.state.currentUser.color
         };
-        //this.setState({currentUser: {name: chatBarState.username}})      
+        this.socket.send(JSON.stringify(dataToServer));    
       break;
       default:throw new Error("Unknown event type " + key);
     }
-    this.socket.send(JSON.stringify(dataToServer));
+
+
+    //seperate text content and image url content
+    function dataComplier(data){
+      let arr = data.split(" ");
+      let imgURLs = arr.filter(index => checkURL(index));
+      let textarr = arr.filter(index => !checkURL(index));
+      let text = textarr.join(" ");
+      return [text,imgURLs]
+    }
+
+    //check url
+    function checkURL(url) {
+      let myRegex = /(https?:\/\/.*\.(?:jpeg|jpg|gif|png))/i;
+      return(myRegex.test(url));
+    }
   }
   
   componentDidMount() {
     this.socket = new WebSocket('ws://localhost:3001');
-    // this.socket.onmessage = e => {
-    //   console.log(e)
-    // }
+
     this.socket.onmessage = this.handleServer;
   }
 
@@ -59,7 +79,6 @@ class App extends Component {
 
       case "incomingNotification":
         curUser.name = data.username;
-
         this.setState({
           currentUser: curUser,
           messages: newMessages
@@ -74,9 +93,8 @@ class App extends Component {
       curUser.color = data.color
         this.setState({currentUser: curUser});
       break;
-      default:
-      // show an error in the console if the message type is unknown
-      throw new Error("Unknown event type " + data.type);
+  
+      default: throw new Error("Unknown event type " + data.type);
     }
   }
 
