@@ -19,27 +19,27 @@ const wss = new SocketServer({ server });
 // handle message from client
 const handleClientMessage = (message, messageId) => {
   let parsedMes = JSON.parse(message);
-  switch(parsedMes.type){
-    case "postMessage":
-    return {
-      type: "incomingMessage",
-      id: messageId,
-      username: parsedMes.username,
-      content: parsedMes.content,
-      imgurls: parsedMes.imgurls,
-      usernameColor:parsedMes.color
-    }
-    case "postNotification":
-    return {
-      type: "incomingNotification",
-      id: messageId,
-      username: parsedMes.username,
-      content: parsedMes.content,
-      imgurls: parsedMes.imgurls
-    }
+  switch (parsedMes.type) {
+    case 'postMessage':
+      return {
+        type: 'incomingMessage',
+        id: messageId,
+        username: parsedMes.username,
+        content: parsedMes.content,
+        imgurls: parsedMes.imgurls,
+        usernameColor: parsedMes.color,
+      };
+    case 'postNotification':
+      return {
+        type: 'incomingNotification',
+        id: messageId,
+        username: parsedMes.username,
+        content: parsedMes.content,
+        imgurls: parsedMes.imgurls,
+      }
     default:
     // show an error in the console if the message type is unknown
-    throw new Error("Unknown event type " + parsedMes.type);
+      throw new Error('Unknown event type ' + parsedMes.type);
   }
 };
 
