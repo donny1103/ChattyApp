@@ -27,7 +27,7 @@ class ChatBar extends React.Component {
     return (
       <footer className="chatbar">
         <input className="chatbar-username" placeholder="Your Name (Optional)" onChange ={onChange('username')} onKeyPress={onKeyPress('username')} />
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onChange ={onChange('content')} onKeyPress={onKeyPress('content')} />
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onChange={onChange('content')} onKeyPress={onKeyPress('content')} />
       </footer>
     );
   }
