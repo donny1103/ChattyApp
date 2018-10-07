@@ -27,7 +27,7 @@ Open another terminal and direct to `ChattApp/chatty_server` and run `npm start`
 
 ![message](https://raw.githubusercontent.com/donny1103/ChattyApp/master/build/images/1stmess.png) Send message as anonymous 
 
-![change name](https://raw.githubusercontent.com/donny1103/ChattyApp/master/build/images/client1changename.png) User1 changes name
+![change name](https://raw.githubusercontent.com/donny1103/ChattyApp/master/build/images/client1changename.png) User1 changes name by typing the new name and hit enter
 
 ![user2](https://raw.githubusercontent.com/donny1103/ChattyApp/master/build/images/client2.png) Message from user2
 
