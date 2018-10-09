@@ -20,7 +20,9 @@ class ChatBar extends React.Component {
         this.props.handleChatBar(this.state[key], key);
         if (key === 'content') {
           e.target.value = '';
+          this.setState({ [key]: '' });
         }
+        console.log(this.state.content)
       }
     };
 

@@ -14,9 +14,8 @@ A small single page app that allows whoever connect to share fun and laugh. No n
 
 ## Installation
 
-git clone and run
- 
-` npm install `
+git clone and run ` npm install ` in both ChattApp/ and ChattApp/chatty_server/
+
 
 Direct to the folder ChattApp and run `npm start` in the terminal to start client-side server
 
